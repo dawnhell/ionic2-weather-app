@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="more"></ion-icon>
+    </button>
+    <ion-title>Location</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="getItems($event)"
+                 placeholder="Choose city">
+  </ion-searchbar>
+  <ion-item-group>
+    <ion-list>
+      <ion-item-divider color="light">Belarus</ion-item-divider>
+      <button ion-item
+              *ngFor="let city of cityList"
+              [class.selected]="city === selectedCity"
+              (click)="onSelectCity(city)">
+        {{city}}
+      </button>
+    </ion-list>
+  </ion-item-group>
+</ion-content>

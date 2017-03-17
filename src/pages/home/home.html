@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle align="right">
+      <ion-icon name="more"></ion-icon>
+    </button>
+
+    <ion-title>Cool weather</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="current-forecast"
+            *ngIf="isGetWeatherForecast"
+            [style.background]="currentForecast.color">
+    <ion-row>
+      <ion-col col-3 offset-1>
+        <span class="city-name">{{selectedCity}}</span>
+        <br>
+        <span class="current-temperature">{{currentForecast.main.temp}}&#176;C</span>
+      </ion-col>
+      <ion-col col-2 offset-2>
+        <ion-icon [name]="currentForecast.icon" class="weather-icon"></ion-icon>
+      </ion-col>
+      <ion-col col-4>
+        <p class="weather-title">{{currentForecast.weather[0].main}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-5 offset-1>
+        <span class="weather-humidity">Humidity: {{currentForecast.main.humidity}}%</span>
+        <br>
+        <span class="weather-wind">Wind: {{currentForecast.wind.speed}} Mph</span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div *ngIf="!isGetWeatherForecast">
+    Loading...
+  </div>
+</ion-content>
