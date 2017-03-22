@@ -1,3 +1,5 @@
+@import url('../../assets/weather-icons/css/weather-icons.css');
+
 .current-forecast {
   color: white;
   font-size: 26px;
@@ -9,16 +11,14 @@
   font-size: 20px
 }
 
-.current-temperature {
-}
-
-.weather-icon {
-  font-size: 50px;
-  padding: 5px 0;
+.wi {
+  font-size: 45px;
+  padding: 10px 0;
 }
 
 .weather-title {
   font-size: 20px;
+  padding: 0 10px;
 }
 
 .weather-humidity {
@@ -27,4 +27,33 @@
 
 .weather-wind {
   font-size: 18px;
+}
+
+.forecast-list {
+
+}
+
+.forecast-list__icon i {
+  color: #444;
+  padding: 5px 10px;
+  font-size: 32px;
+  font-weight: 200;
+}
+
+.forecast-list__title {
+  padding: 0 10px 0;
+  font-weight: 200;
+  font-size: 24px;
+  color: #222
+}
+
+.forecast-list__description {
+  padding: 0 10px;
+  font-weight: 200;
+  font-size: 20px;
+}
+
+.forecast-list__temperature {
+  font-size: 26px;
+  font-weight: 200;
 }

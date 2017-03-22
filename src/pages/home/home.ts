@@ -9,62 +9,83 @@ import { WeatherService }      from './weather.service';
 
 export class Home implements OnInit{
   private selectedCity: string;
-  private currentForecast: any;
-  private isGetWeatherForecast: boolean = false;
+  private tomorrowDayName: any;
+  private fiveDayForecast: Array<Object>;
+  private isGetFiveDayForecast: boolean = false;
   
   constructor(private _cityService: CityService,
               private _weatherService: WeatherService) {
     this.selectedCity = this._cityService.getCity();
-    this.isGetWeatherForecast = false;
-    this.getCurrentWeather();
+    this.isGetFiveDayForecast = false;
+    this.getFiveDayForecast();
   }
   
   ngOnInit() {
     
   }
   
-  getCurrentWeather() {
-    this.currentForecast = this._weatherService.getCurrentWeather(this.selectedCity).subscribe(
-      weather => {
-        this.currentForecast = weather;
-        console.log(weather);
-        this.checkCurrentWeather();
-        this.isGetWeatherForecast = true;
-      },
-      error => console.log(error)
-    );
+  getFiveDayForecast() {
+    this._weatherService.getFiveDayForecast(this.selectedCity)
+      .subscribe(
+        forecast => {
+          this.fiveDayForecast = new Array<Object>();
+          this.fiveDayForecast.push(forecast[0]);
+          this.fiveDayForecast.push(forecast[8]);
+          this.fiveDayForecast.push(forecast[16]);
+          this.fiveDayForecast.push(forecast[24]);
+          this.fiveDayForecast.push(forecast[32]);
+          this.checkWeather(this.fiveDayForecast[0]);
+          this.checkWeather(this.fiveDayForecast[1]);
+          this.checkWeather(this.fiveDayForecast[2]);
+          this.checkWeather(this.fiveDayForecast[3]);
+          this.checkWeather(this.fiveDayForecast[4]);
+          this.isGetFiveDayForecast = true;
+          
+          console.log(this.fiveDayForecast);
+        },
+        error => console.log(error)
+      );
   }
   
-  checkCurrentWeather() {
+  getTomorrowDayName() {
+    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday'][new Date().getDay() + 2];
+  }
+  
+  checkWeather(currentForecast: any) {
     let weatherIcon;
     let weatherColor;
   
-    if(this.currentForecast.weather[0].main == 'Clouds') {
-      weatherIcon = 'cloudy';
+    if(currentForecast.weather[0].main == 'Clouds') {
+      currentForecast.icon = 'wi wi-day-cloudy';
     }
-  
-    if(this.currentForecast.weather[0].main == 'Clear') {
-      weatherIcon = 'sunny';
+    if(currentForecast.weather[0].main == 'Clear') {
+      currentForecast.icon = 'wi wi-day-sunny';
     }
-  
-    if(this.currentForecast.weather[0].main == 'Rain') {
-      weatherIcon = 'rainy';
+    if(currentForecast.weather[0].main == 'Rain') {
+      currentForecast.icon = 'wi wi-day-rain';
     }
-  
-    if(this.currentForecast.main.temp < 0) {
-      weatherColor = '#1E88E5';
+    if(currentForecast.weather[0].main == 'Snow') {
+      currentForecast.icon = 'wi wi-day-snow';
     }
-    if(this.currentForecast.main.temp > 0 && this.currentForecast.main.temp < 10) {
-      weatherColor = '#26A69A';
+    if(currentForecast.weather[0].main == 'Mist') {
+      currentForecast.icon = 'wi wi-day-fog';
     }
-    if(this.currentForecast.main.temp > 10 && this.currentForecast.main.temp < 20) {
-      weatherColor = '#FFF176';
+    
+    if(currentForecast.main.temp <= 0) {
+      currentForecast.backgroundColor = '#1E88E5';
+      currentForecast.fontColor = 'white';
     }
-    if(this.currentForecast.main.temp > 20) {
-      weatherColor = '#FB8C00';
+    if(currentForecast.main.temp > 0 && currentForecast.main.temp < 10) {
+      currentForecast.backgroundColor = '#26A69A';
+      currentForecast.fontColor = 'white';
     }
-  
-    this.currentForecast.icon = weatherIcon;
-    this.currentForecast.color = weatherColor;
+    if(currentForecast.main.temp > 10 && currentForecast.main.temp < 20) {
+      currentForecast.backgroundColor = '#FFF176';
+      currentForecast.fontColor = '#333';
+    }
+    if(currentForecast.main.temp > 20) {
+      currentForecast.backgroundColor = '#FB8C00';
+      currentForecast.fontColor = '#eee';
+    }
   }
 }

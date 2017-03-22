@@ -12,13 +12,13 @@ export class WeatherService {
               private _cityService: CityService) {
     this.cityList = this._cityService.getCityList();
   }
-              
-  getCurrentWeather(cityName: string): Observable<Object> {
+  
+  getFiveDayForecast(cityName: String): Observable<Array<Object>> {
     let cityId = this.cityList.filter(city => city.name == cityName)[0].id;
-    let request = 'http://api.openweathermap.org/data/2.5/weather?id=' + cityId + '&units=metric&appid=e636e10c15ac5158ecfe75a7198280bc';
-    
+    let request = 'http://api.openweathermap.org/data/2.5/forecast?id=' + cityId + '&units=metric&appid=e636e10c15ac5158ecfe75a7198280bc';
+  
     return this._http.get(request, { headers: contentHeaders })
-      .map((res: Response) => res.json())
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    .map((res: Response) => res.json().list)
+    .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 }

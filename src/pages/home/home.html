@@ -9,32 +9,90 @@
 </ion-header>
 
 <ion-content>
-
   <ion-grid class="current-forecast"
-            *ngIf="isGetWeatherForecast"
-            [style.background]="currentForecast.color">
+            *ngIf="isGetFiveDayForecast"
+            [style.background]="fiveDayForecast[0].backgroundColor"
+            [style.color]="fiveDayForecast[0].fontColor">
     <ion-row>
       <ion-col col-3 offset-1>
         <span class="city-name">{{selectedCity}}</span>
         <br>
-        <span class="current-temperature">{{currentForecast.main.temp}}&#176;C</span>
+        <span class="current-temperature">{{fiveDayForecast[0].main.temp}}&#176;C</span>
       </ion-col>
       <ion-col col-2 offset-2>
-        <ion-icon [name]="currentForecast.icon" class="weather-icon"></ion-icon>
+        <i [class]="fiveDayForecast[0].icon"></i>
       </ion-col>
       <ion-col col-4>
-        <p class="weather-title">{{currentForecast.weather[0].main}}</p>
+        <p class="weather-title">{{fiveDayForecast[0].weather[0].main}}</p>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col-5 offset-1>
-        <span class="weather-humidity">Humidity: {{currentForecast.main.humidity}}%</span>
+        <span class="weather-humidity">Humidity: {{fiveDayForecast[0].main.humidity}}%</span>
         <br>
-        <span class="weather-wind">Wind: {{currentForecast.wind.speed}} Mph</span>
+        <span class="weather-wind">Wind: {{fiveDayForecast[0].wind.speed}} Mph</span>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <div *ngIf="!isGetWeatherForecast">
+
+  <ion-list class="forecast-list" *ngIf="isGetFiveDayForecast">
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-2>
+            <ion-avatar class="forecast-list__icon">
+              <i [class]="fiveDayForecast[0].icon"></i>
+            </ion-avatar>
+          </ion-col>
+          <ion-col col-7>
+            <h2 class="forecast-list__title">Today</h2>
+            <p class="forecast-list__description">{{fiveDayForecast[0].weather[0].description}}</p>
+          </ion-col>
+          <ion-col col-3>
+            <span class="forecast-list__temperature">{{fiveDayForecast[0].main.temp}}&#176;C</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-2>
+            <ion-avatar class="forecast-list__icon">
+              <i [class]="fiveDayForecast[1].icon"></i>
+            </ion-avatar>
+          </ion-col>
+          <ion-col col-7>
+            <h2 class="forecast-list__title">Tomorow</h2>
+            <p class="forecast-list__description">{{fiveDayForecast[1].weather[0].description}}</p>
+          </ion-col>
+          <ion-col col-3>
+            <span class="forecast-list__temperature">{{fiveDayForecast[1].main.temp}}&#176;C</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-2>
+            <ion-avatar class="forecast-list__icon">
+              <i [class]="fiveDayForecast[2].icon"></i>
+            </ion-avatar>
+          </ion-col>
+          <ion-col col-7>
+            <h2 class="forecast-list__title">{{getTomorrowDayName()}}</h2>
+            <p class="forecast-list__description">{{fiveDayForecast[2].weather[0].description}}</p>
+          </ion-col>
+          <ion-col col-3>
+            <span class="forecast-list__temperature">{{fiveDayForecast[2].main.temp}}&#176;C</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="!isGetFiveDayForecast">
     Loading...
   </div>
 </ion-content>
