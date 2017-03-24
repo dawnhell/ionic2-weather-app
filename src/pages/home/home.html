@@ -3,7 +3,6 @@
     <button ion-button menuToggle align="right">
       <ion-icon name="more"></ion-icon>
     </button>
-
     <ion-title>Cool weather</ion-title>
   </ion-navbar>
 </ion-header>
@@ -59,15 +58,15 @@
         <ion-row>
           <ion-col col-2>
             <ion-avatar class="forecast-list__icon">
-              <i [class]="fiveDayForecast[1].icon"></i>
+              <i [class]="fiveDayForecast[8].icon"></i>
             </ion-avatar>
           </ion-col>
           <ion-col col-7>
             <h2 class="forecast-list__title">Tomorow</h2>
-            <p class="forecast-list__description">{{fiveDayForecast[1].weather[0].description}}</p>
+            <p class="forecast-list__description">{{fiveDayForecast[8].weather[0].description}}</p>
           </ion-col>
           <ion-col col-3>
-            <span class="forecast-list__temperature">{{fiveDayForecast[1].main.temp}}&#176;C</span>
+            <span class="forecast-list__temperature">{{fiveDayForecast[8].main.temp_max}}&#176;C</span>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -77,20 +76,59 @@
         <ion-row>
           <ion-col col-2>
             <ion-avatar class="forecast-list__icon">
-              <i [class]="fiveDayForecast[2].icon"></i>
+              <i [class]="fiveDayForecast[16].icon"></i>
             </ion-avatar>
           </ion-col>
           <ion-col col-7>
             <h2 class="forecast-list__title">{{getTomorrowDayName()}}</h2>
-            <p class="forecast-list__description">{{fiveDayForecast[2].weather[0].description}}</p>
+            <p class="forecast-list__description">{{fiveDayForecast[16].weather[0].description}}</p>
           </ion-col>
           <ion-col col-3>
-            <span class="forecast-list__temperature">{{fiveDayForecast[2].main.temp}}&#176;C</span>
+            <span class="forecast-list__temperature">{{fiveDayForecast[16].main.temp_max}}&#176;C</span>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
+    <ion-item class="forecast-btn">
+      <button ion-button full large color="primary">5 day forecast</button>
+    </ion-item>
   </ion-list>
+
+  <ion-card class="forecast-details" *ngIf="isGetFiveDayForecast">
+    <ion-card-header class="forecast-details__header">
+      Details
+    </ion-card-header>
+    <ion-card-content class="forecast-details__content">
+      <ion-grid class="content-grid">
+        <ion-row>
+          <ion-col class="content-grid__clouds">
+            <p class="color-777">CLOUDS</p>
+            <p>{{fiveDayForecast[0].clouds.all}}%</p>
+          </ion-col>
+          <ion-col class="content-grid__pressure">
+            <p class="color-777">PRESSURE</p>
+            <p>{{fiveDayForecast[0].main.pressure}} mb.</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="content-grid__wind">
+            <p class="color-777">WIND</p>
+            <p>
+              {{fiveDayForecast[0].wind.speed}} Mph,
+              {{(fiveDayForecast[0].wind.deg >= 270 || fiveDayForecast[0].wind.deg <= 45) ?
+              "Eastern": ((fiveDayForecast[0].wind.deg >= 45 || fiveDayForecast[0].wind.deg <= 135) ?
+              "Norhten" : ((fiveDayForecast[0].wind.deg >= 135 || fiveDayForecast[0].wind.deg <= 225) ?
+              "Western" : "Southen"))}}
+            </p>
+          </ion-col>
+          <ion-col class="content-grid__humidity">
+            <p class="color-777">HUMIDITY</p>
+            <p>{{fiveDayForecast[0].main.humidity}}%</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 
   <div *ngIf="!isGetFiveDayForecast">
     Loading...

@@ -8,14 +8,13 @@ import { WeatherService }      from './weather.service';
 })
 
 export class Home implements OnInit{
-  private selectedCity: string;
-  private tomorrowDayName: any;
-  private fiveDayForecast: Array<Object>;
+  private selectedCity:         string;
+  private fiveDayForecast:      Array<Object>;
   private isGetFiveDayForecast: boolean = false;
   
   constructor(private _cityService: CityService,
               private _weatherService: WeatherService) {
-    this.selectedCity = this._cityService.getCity();
+    this.selectedCity         = this._cityService.getCity();
     this.isGetFiveDayForecast = false;
     this.getFiveDayForecast();
   }
@@ -29,16 +28,11 @@ export class Home implements OnInit{
       .subscribe(
         forecast => {
           this.fiveDayForecast = new Array<Object>();
-          this.fiveDayForecast.push(forecast[0]);
-          this.fiveDayForecast.push(forecast[8]);
-          this.fiveDayForecast.push(forecast[16]);
-          this.fiveDayForecast.push(forecast[24]);
-          this.fiveDayForecast.push(forecast[32]);
-          this.checkWeather(this.fiveDayForecast[0]);
-          this.checkWeather(this.fiveDayForecast[1]);
-          this.checkWeather(this.fiveDayForecast[2]);
-          this.checkWeather(this.fiveDayForecast[3]);
-          this.checkWeather(this.fiveDayForecast[4]);
+          
+          for(let i = 0; i < forecast.length; ++i) {
+            this.fiveDayForecast.push(forecast[i]);
+            this.checkWeather(this.fiveDayForecast[i]);
+          }
           this.isGetFiveDayForecast = true;
           
           console.log(this.fiveDayForecast);
@@ -48,13 +42,13 @@ export class Home implements OnInit{
   }
   
   getTomorrowDayName() {
-    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday'][new Date().getDay() + 2];
+    return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][new Date().getDay() + 1];
   }
   
   checkWeather(currentForecast: any) {
-    let weatherIcon;
-    let weatherColor;
-  
+    currentForecast.main.temp = Math.floor(currentForecast.main.temp);
+    currentForecast.main.temp_max = Math.floor(currentForecast.main.temp_max);
+    
     if(currentForecast.weather[0].main == 'Clouds') {
       currentForecast.icon = 'wi wi-day-cloudy';
     }
@@ -75,11 +69,11 @@ export class Home implements OnInit{
       currentForecast.backgroundColor = '#1E88E5';
       currentForecast.fontColor = 'white';
     }
-    if(currentForecast.main.temp > 0 && currentForecast.main.temp < 10) {
+    if(currentForecast.main.temp > 0 && currentForecast.main.temp <= 10) {
       currentForecast.backgroundColor = '#26A69A';
       currentForecast.fontColor = 'white';
     }
-    if(currentForecast.main.temp > 10 && currentForecast.main.temp < 20) {
+    if(currentForecast.main.temp > 10 && currentForecast.main.temp <= 20) {
       currentForecast.backgroundColor = '#FFF176';
       currentForecast.fontColor = '#333';
     }

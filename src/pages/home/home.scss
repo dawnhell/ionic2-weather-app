@@ -1,4 +1,4 @@
-@import url('../../assets/weather-icons/css/weather-icons.css');
+@import url('../assets/weather-icons/css/weather-icons.css');
 
 .current-forecast {
   color: white;
@@ -29,8 +29,16 @@
   font-size: 18px;
 }
 
+.forecast-btn {
+  padding-left: 15px !important;
+}
+
 .forecast-list {
 
+}
+
+.forecast-list ion-item {
+  padding-left: 0;
 }
 
 .forecast-list__icon i {
@@ -56,4 +64,51 @@
 .forecast-list__temperature {
   font-size: 26px;
   font-weight: 200;
+}
+
+.forecast-details {
+  border: 1px solid #eee;
+}
+
+.forecast-details__header {
+  color: #444;
+  font-weight: 300;
+  border-bottom: 1px solid #eee;
+}
+
+.forecast-details__content {
+  padding: 0;
+}
+
+.content-grid {
+  padding: 0;
+}
+
+.content-grid__clouds {
+  text-align: left;
+  padding: 10px 20px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.content-grid__pressure {
+  text-align: left;
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.content-grid__wind {
+  text-align: left;
+  padding: 10px 20px 0;
+  border-right: 1px solid #eee;
+}
+
+.content-grid__humidity {
+  text-align: left;
+  padding: 10px 20px 0;
+}
+
+.color-777 {
+  color: #777 !important;
+  font-size: 12px !important;
 }
