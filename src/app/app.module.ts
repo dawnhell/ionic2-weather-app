@@ -5,8 +5,10 @@ import { IonicApp,
 import { MyApp }                  from './app.component';
 import { Home }                   from '../pages/home/home';
 import { Location }               from '../pages/location/location';
-import { CityService }            from "../pages/location/city.service";
+import { CityService }            from '../pages/location/city.service';
 import { WeatherService }         from '../pages/home/weather.service';
+import { File }                   from '@ionic-native/file';
+import {Network} from "@ionic-native/network";
 
 @NgModule({
   declarations: [
@@ -24,9 +26,11 @@ import { WeatherService }         from '../pages/home/weather.service';
     Location
   ],
   providers: [
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     CityService,
-    WeatherService
+    WeatherService,
+    File,
+    Network
   ]
 })
 export class AppModule {}

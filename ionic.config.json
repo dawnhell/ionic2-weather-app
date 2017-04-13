@@ -1,6 +1,6 @@
 {
-  "name": "first",
-  "app_id": "",
+  "name": "ionic2-weather-app",
+  "app_id": "baac691c",
   "v2": true,
   "typescript": true
 }

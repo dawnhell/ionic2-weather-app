@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-grid class="current-forecast"
-            *ngIf="isGetFiveDayForecast"
+            *ngIf="isGetFifeDayForecast"
             [style.background]="fiveDayForecast[0].backgroundColor"
             [style.color]="fiveDayForecast[0].fontColor">
     <ion-row>
@@ -34,8 +34,8 @@
     </ion-row>
   </ion-grid>
 
-  <ion-list class="forecast-list" *ngIf="isGetFiveDayForecast">
-    <ion-item>
+  <ion-list class="forecast-list" *ngIf="isGetFifeDayForecast">
+    <button ion-item>
       <ion-grid>
         <ion-row>
           <ion-col col-2>
@@ -52,8 +52,8 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-item>
-    <ion-item>
+    </button>
+    <button ion-item>
       <ion-grid>
         <ion-row>
           <ion-col col-2>
@@ -70,8 +70,8 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-item>
-    <ion-item>
+    </button>
+    <button ion-item>
       <ion-grid>
         <ion-row>
           <ion-col col-2>
@@ -88,13 +88,13 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-item>
+    </button>
     <ion-item class="forecast-btn">
       <button ion-button full large color="primary">5 day forecast</button>
     </ion-item>
   </ion-list>
 
-  <ion-card class="forecast-details" *ngIf="isGetFiveDayForecast">
+  <ion-card class="forecast-details" *ngIf="isGetFifeDayForecast">
     <ion-card-header class="forecast-details__header">
       Details
     </ion-card-header>
@@ -130,7 +130,9 @@
     </ion-card-content>
   </ion-card>
 
-  <div *ngIf="!isGetFiveDayForecast">
-    Loading...
+  <div class="spinner-wrapper" *ngIf="!isGetFifeDayForecast">
+    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66">
+      <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
   </div>
 </ion-content>

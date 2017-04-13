@@ -37,7 +37,7 @@
 
 }
 
-.forecast-list ion-item {
+.forecast-list button {
   padding-left: 0;
 }
 
@@ -111,4 +111,49 @@
 .color-777 {
   color: #777 !important;
   font-size: 12px !important;
+}
+
+.spinner-wrapper {
+  padding-top: 20px;
+  text-align: center;
+}
+
+$offset: 187;
+$duration: 1.4s;
+
+.spinner {
+  animation: rotator $duration linear infinite;
+}
+
+@keyframes rotator {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(270deg); }
+}
+
+.path {
+  stroke-dasharray: $offset;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  animation: dash $duration ease-in-out infinite,
+             colors ($duration*4) ease-in-out infinite;
+}
+
+@keyframes colors {
+  0% { stroke: #2196F3; }
+  25% { stroke: #f44336; }
+  50% { stroke: #FFEB3B; }
+  75% { stroke: #4CAF50; }
+  100% { stroke: #2196F3; }
+}
+
+@keyframes dash {
+  0% { stroke-dashoffset: $offset; }
+  50% {
+    stroke-dashoffset: $offset/4;
+    transform:rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: $offset;
+    transform:rotate(450deg);
+  }
 }
