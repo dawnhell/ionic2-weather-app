@@ -11,8 +11,9 @@ import { CityService }         from '../location/city.service';
 
 export class Home implements OnInit{
   private selectedCity:         string;
-  private fiveDayForecast:      Array<Object>;
+  private fifeDayForecast:      Array<Object>;
   private isGetFifeDayForecast: boolean = false;
+  private isFoundForecast:      boolean = false;
   
   constructor(private _cityService: CityService,
               private _weatherService: WeatherService,
@@ -20,6 +21,7 @@ export class Home implements OnInit{
               private _network: Network) {
     this.selectedCity         = this._cityService.getCity();
     this.isGetFifeDayForecast = false;
+    this.isFoundForecast      = false;
     this.getFifedayForecastFromFile();
   }
   
@@ -28,53 +30,55 @@ export class Home implements OnInit{
   }
   
   writeFifedayForecastToFile(forecast: string) {
-    this._file.checkFile(this._file.dataDirectory, 'fifedayforecast.json')
+    this._file.checkFile(this._file.dataDirectory, this.selectedCity + '.json')
       .then(() => {
-        this._file.writeExistingFile(this._file.dataDirectory, 'fifedayforecast.json', forecast);
+        this._file.writeExistingFile(this._file.dataDirectory, this.selectedCity + '.json', forecast);
       })
       .catch((error) => {
-        alert(JSON.stringify(error));
-        this._file.createFile(this._file.dataDirectory, 'fifedayforecast.json', true)
+        this._file.createFile(this._file.dataDirectory, this.selectedCity + '.json', true)
         .then(_ => {
-          this._file.writeExistingFile(this._file.dataDirectory, 'fifedayforecast.json', forecast);
+          this._file.writeExistingFile(this._file.dataDirectory, this.selectedCity + '.json', forecast);
         })
       });
   }
   
   getFifedayForecastFromFile() {
-    this._file.checkFile(this._file.dataDirectory, 'fifedayforecast.json')
+    this._file.checkFile(this._file.dataDirectory, this.selectedCity + '.json')
       .then(() => {
-        this._file.readAsText(this._file.dataDirectory, 'fifedayforecast.json')
+        this.isFoundForecast = false;
+        this._file.readAsText(this._file.dataDirectory, this.selectedCity + '.json')
           .then((file) => {
             file = JSON.parse(file);
-            this.fiveDayForecast = new Array<Object>();
+            this.fifeDayForecast = new Array<Object>();
   
             for(let i = 0; i < file.length; ++i) {
-              this.fiveDayForecast.push(file[i]);
-              this.checkWeather(this.fiveDayForecast[i]);
+              this.fifeDayForecast.push(file[i]);
+              this.checkWeather(this.fifeDayForecast[i]);
             }
             this.isGetFifeDayForecast = true;
           });
       })
       .catch((error) => {
-      
+        this.isFoundForecast = true;
       });
   }
   
   getFifeDayForecast() {
+    // alert(this.fifeDayForecast[0].currentDate);
     if(this._network.type != "unknown" && this._network.type != "none") {
       this._weatherService.getFifeDayForecast(this.selectedCity)
         .subscribe(
           forecast => {
-            this.fiveDayForecast = new Array<Object>();
+            this.fifeDayForecast = new Array<Object>();
             
             for(let i = 0; i < forecast.length; ++i) {
-              this.fiveDayForecast.push(forecast[i]);
-              this.checkWeather(this.fiveDayForecast[i]);
+              this.fifeDayForecast.push(forecast[i]);
+              this.checkWeather(this.fifeDayForecast[i]);
             }
         
             this.writeFifedayForecastToFile(JSON.stringify(forecast));
             this.isGetFifeDayForecast = true;
+            this.isFoundForecast = false;
           },
           error => {
             console.log(error);
@@ -91,8 +95,10 @@ export class Home implements OnInit{
   }
   
   checkWeather(currentForecast: any) {
+    let date = new Date(Number.parseInt(currentForecast.dt) * 1000);
     currentForecast.main.temp = Math.floor(currentForecast.main.temp);
     currentForecast.main.temp_max = Math.floor(currentForecast.main.temp_max);
+    currentForecast.currentDate = (date.getHours() == 0 ? 24 : date.getHours()) + ":" + (date.getMinutes() == 0 ? "00" : date.getMinutes());
     
     if(currentForecast.weather[0].main == 'Clouds') {
       currentForecast.icon = 'wi wi-day-cloudy';
