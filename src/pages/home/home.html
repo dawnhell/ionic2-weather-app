@@ -8,50 +8,59 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+         pullingIcon="arrow-down"
+         pullingText="Pull to refresh"
+         refreshingSpinner="circles"
+         refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <ion-grid class="current-forecast"
-            *ngIf="isGetFifeDayForecast"
-            [style.background]="fifeDayForecast[0].backgroundColor"
-            [style.color]="fifeDayForecast[0].fontColor">
+            *ngIf="isGetFiveDayForecast"
+            [style.background]="fiveDayForecast[0].backgroundColor"
+            [style.color]="fiveDayForecast[0].fontColor">
     <ion-row>
-      <span class="valid-time">Valid on {{fifeDayForecast[0].currentDate}}</span>
+      <span class="valid-time">Valid on {{fiveDayForecast[0].currentDate}}</span>
     </ion-row>
     <ion-row>
       <ion-col col-3 offset-1>
         <span class="city-name">{{selectedCity}}</span>
         <br>
-        <span class="current-temperature">{{fifeDayForecast[0].main.temp}}&#176;C</span>
+        <span class="current-temperature">{{fiveDayForecast[0].main.temp}}&#176;C</span>
       </ion-col>
       <ion-col col-2 offset-2>
-        <i [class]="fifeDayForecast[0].icon"></i>
+        <i [class]="fiveDayForecast[0].icon"></i>
       </ion-col>
       <ion-col col-4>
-        <p class="weather-title">{{fifeDayForecast[0].weather[0].main}}</p>
+        <p class="weather-title">{{fiveDayForecast[0].weather[0].main}}</p>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col-5 offset-1>
-        <span class="weather-humidity">Humidity: {{fifeDayForecast[0].main.humidity}}%</span>
+        <span class="weather-humidity">Humidity: {{fiveDayForecast[0].main.humidity}}%</span>
         <br>
-        <span class="weather-wind">Wind: {{fifeDayForecast[0].wind.speed}} Mph</span>
+        <span class="weather-wind">Wind: {{fiveDayForecast[0].wind.speed}} Mph</span>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-list class="forecast-list" *ngIf="isGetFifeDayForecast">
+  <ion-list class="forecast-list" *ngIf="isGetFiveDayForecast">
     <button ion-item>
       <ion-grid>
         <ion-row>
           <ion-col col-2>
             <ion-avatar class="forecast-list__icon">
-              <i [class]="fifeDayForecast[0].icon"></i>
+              <i [class]="fiveDayForecast[0].icon"></i>
             </ion-avatar>
           </ion-col>
           <ion-col col-7>
             <h2 class="forecast-list__title">Today</h2>
-            <p class="forecast-list__description">{{fifeDayForecast[0].weather[0].description}}</p>
+            <p class="forecast-list__description">{{fiveDayForecast[0].weather[0].description}}</p>
           </ion-col>
           <ion-col col-3>
-            <span class="forecast-list__temperature">{{fifeDayForecast[0].main.temp}}&#176;C</span>
+            <span class="forecast-list__temperature">{{fiveDayForecast[0].main.temp}}&#176;C</span>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -61,15 +70,15 @@
         <ion-row>
           <ion-col col-2>
             <ion-avatar class="forecast-list__icon">
-              <i [class]="fifeDayForecast[8].icon"></i>
+              <i [class]="fiveDayForecast[8].icon"></i>
             </ion-avatar>
           </ion-col>
           <ion-col col-7>
             <h2 class="forecast-list__title">Tomorow</h2>
-            <p class="forecast-list__description">{{fifeDayForecast[8].weather[0].description}}</p>
+            <p class="forecast-list__description">{{fiveDayForecast[8].weather[0].description}}</p>
           </ion-col>
           <ion-col col-3>
-            <span class="forecast-list__temperature">{{fifeDayForecast[8].main.temp_max}}&#176;C</span>
+            <span class="forecast-list__temperature">{{fiveDayForecast[8].main.temp_max}}&#176;C</span>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -79,25 +88,31 @@
         <ion-row>
           <ion-col col-2>
             <ion-avatar class="forecast-list__icon">
-              <i [class]="fifeDayForecast[16].icon"></i>
+              <i [class]="fiveDayForecast[16].icon"></i>
             </ion-avatar>
           </ion-col>
           <ion-col col-7>
             <h2 class="forecast-list__title">{{getTomorrowDayName()}}</h2>
-            <p class="forecast-list__description">{{fifeDayForecast[16].weather[0].description}}</p>
+            <p class="forecast-list__description">{{fiveDayForecast[16].weather[0].description}}</p>
           </ion-col>
           <ion-col col-3>
-            <span class="forecast-list__temperature">{{fifeDayForecast[16].main.temp_max}}&#176;C</span>
+            <span class="forecast-list__temperature">{{fiveDayForecast[16].main.temp_max}}&#176;C</span>
           </ion-col>
         </ion-row>
       </ion-grid>
     </button>
     <ion-item class="forecast-btn">
-      <button ion-button full large color="primary">5 day forecast</button>
+      <button ion-button
+              full
+              large
+              color="primary"
+              (click)="onDetailClick()">
+        5 day forecast
+      </button>
     </ion-item>
   </ion-list>
 
-  <ion-card class="forecast-details" *ngIf="isGetFifeDayForecast">
+  <ion-card class="forecast-details" *ngIf="isGetFiveDayForecast">
     <ion-card-header class="forecast-details__header">
       Details
     </ion-card-header>
@@ -106,41 +121,45 @@
         <ion-row>
           <ion-col class="content-grid__clouds">
             <p class="color-777">CLOUDS</p>
-            <p>{{fifeDayForecast[0].clouds.all}}%</p>
+            <p>{{fiveDayForecast[0].clouds.all}}%</p>
           </ion-col>
           <ion-col class="content-grid__pressure">
             <p class="color-777">PRESSURE</p>
-            <p>{{fifeDayForecast[0].main.pressure}} mb.</p>
+            <p>{{fiveDayForecast[0].main.pressure}} mb.</p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col class="content-grid__wind">
             <p class="color-777">WIND</p>
             <p>
-              {{fifeDayForecast[0].wind.speed}} Mph,
-              {{(fifeDayForecast[0].wind.deg >= 270 || fifeDayForecast[0].wind.deg <= 45) ?
-              "Eastern": ((fifeDayForecast[0].wind.deg >= 45 || fifeDayForecast[0].wind.deg <= 135) ?
-              "Norhten" : ((fifeDayForecast[0].wind.deg >= 135 || fifeDayForecast[0].wind.deg <= 225) ?
-              "Western" : "Southen"))}}
+              {{fiveDayForecast[0].wind.speed}} Mph,
+              {{(fiveDayForecast[0].wind.deg >= 270 || fiveDayForecast[0].wind.deg <= 45) ?
+              "Eastern": ((fiveDayForecast[0].wind.deg >= 45 || fiveDayForecast[0].wind.deg <= 135) ?
+              "Norhten" : ((fiveDayForecast[0].wind.deg >= 135 || fiveDayForecast[0].wind.deg <= 225) ?
+              "Western" : "Southern"))}}
             </p>
           </ion-col>
           <ion-col class="content-grid__humidity">
             <p class="color-777">HUMIDITY</p>
-            <p>{{fifeDayForecast[0].main.humidity}}%</p>
+            <p>{{fiveDayForecast[0].main.humidity}}%</p>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
   </ion-card>
 
-  <div class="spinner-wrapper" *ngIf="!isGetFifeDayForecast && !isFoundForecast">
-    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66">
-      <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+  <div class="spinner-wrapper" *ngIf="!isGetFiveDayForecast && !isFoundForecast">
+    <svg class="spinner" viewBox="0 0 50 50">
+      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
     </svg>
   </div>
 
-  <div *ngIf="isFoundForecast">
-    <i class="fa fa-wifi" aria-hidden="true"></i>
-    <p class="not-connection-title">No connection to the internet.</p>
+  <div *ngIf="isFoundForecast && !isGetFiveDayForecast">
+    <p class="swipe-for-refresh">
+      <ion-icon name="arrow-round-up"></ion-icon>
+      <br>
+      Refresh
+    </p>
+    <p class="no-connection-title">No connection to the internet.</p>
   </div>
 </ion-content>

@@ -1,8 +1,11 @@
-import { Component, OnInit }   from '@angular/core';
-import { File }                from '@ionic-native/file';
-import { Network }             from '@ionic-native/network';
-import { WeatherService }      from './weather.service';
-import { CityService }         from '../location/city.service';
+import { Component, OnInit }      from '@angular/core';
+import { Network }                from '@ionic-native/network';
+import { NavController }          from 'ionic-angular';
+import { WeatherService }         from '../services/weather.service';
+import { CityService }            from '../services/city.service';
+import { Details }                from '../details/details';
+import { CurrentForecastService } from '../services/currentforecast.service';
+import { Storage }                from '@ionic/storage';
 
 @Component({
   selector: 'home-page',
@@ -11,74 +14,43 @@ import { CityService }         from '../location/city.service';
 
 export class Home implements OnInit{
   private selectedCity:         string;
-  private fifeDayForecast:      Array<Object>;
-  private isGetFifeDayForecast: boolean = false;
+  private fiveDayForecast:      Array<Object>;
+  private isGetFiveDayForecast: boolean = false;
   private isFoundForecast:      boolean = false;
   
   constructor(private _cityService: CityService,
               private _weatherService: WeatherService,
-              private _file: File,
-              private _network: Network) {
+              private _navController: NavController,
+              private _network: Network,
+              private _storage: Storage,
+              private _currentForecastService: CurrentForecastService) {
     this.selectedCity         = this._cityService.getCity();
-    this.isGetFifeDayForecast = false;
+    this.isGetFiveDayForecast = false;
     this.isFoundForecast      = false;
-    this.getFifedayForecastFromFile();
   }
   
   ngOnInit() {
-    this.getFifeDayForecast();
+    this.getFiveDayForecast();
   }
   
-  writeFifedayForecastToFile(forecast: string) {
-    this._file.checkFile(this._file.dataDirectory, this.selectedCity + '.json')
-      .then(() => {
-        this._file.writeExistingFile(this._file.dataDirectory, this.selectedCity + '.json', forecast);
-      })
-      .catch((error) => {
-        this._file.createFile(this._file.dataDirectory, this.selectedCity + '.json', true)
-        .then(_ => {
-          this._file.writeExistingFile(this._file.dataDirectory, this.selectedCity + '.json', forecast);
-        })
-      });
-  }
-  
-  getFifedayForecastFromFile() {
-    this._file.checkFile(this._file.dataDirectory, this.selectedCity + '.json')
-      .then(() => {
-        this.isFoundForecast = false;
-        this._file.readAsText(this._file.dataDirectory, this.selectedCity + '.json')
-          .then((file) => {
-            file = JSON.parse(file);
-            this.fifeDayForecast = new Array<Object>();
-  
-            for(let i = 0; i < file.length; ++i) {
-              this.fifeDayForecast.push(file[i]);
-              this.checkWeather(this.fifeDayForecast[i]);
-            }
-            this.isGetFifeDayForecast = true;
-          });
-      })
-      .catch((error) => {
-        this.isFoundForecast = true;
-      });
-  }
-  
-  getFifeDayForecast() {
-    // alert(this.fifeDayForecast[0].currentDate);
+  getFiveDayForecast() {
     if(this._network.type != "unknown" && this._network.type != "none") {
-      this._weatherService.getFifeDayForecast(this.selectedCity)
+      this._weatherService.getFiveDayForecast(this.selectedCity)
         .subscribe(
           forecast => {
-            this.fifeDayForecast = new Array<Object>();
+            this.fiveDayForecast = new Array<Object>();
             
             for(let i = 0; i < forecast.length; ++i) {
-              this.fifeDayForecast.push(forecast[i]);
-              this.checkWeather(this.fifeDayForecast[i]);
+              this.fiveDayForecast.push(forecast[i]);
+              this.checkWeather(this.fiveDayForecast[i]);
             }
         
-            this.writeFifedayForecastToFile(JSON.stringify(forecast));
-            this.isGetFifeDayForecast = true;
+            this.isGetFiveDayForecast = true;
             this.isFoundForecast = false;
+            this._currentForecastService.setCurrentForecast(this.fiveDayForecast);
+            this._storage.ready().then(() => {
+              this._storage.set(this.selectedCity, JSON.stringify(this.fiveDayForecast));
+            });
           },
           error => {
             console.log(error);
@@ -86,8 +58,28 @@ export class Home implements OnInit{
         );
     }
     if(this._network.type == "none" || this._network.type == "unknown") {
-      this.getFifedayForecastFromFile();
+      this._storage.ready().then(() => {
+        this._storage.get(this.selectedCity)
+          .then((file) => {
+            file = JSON.parse(file);
+            this.fiveDayForecast = new Array<Object>();
+  
+            for(let i = 0; i < file.length; ++i) {
+              this.fiveDayForecast.push(file[i]);
+              this.checkWeather(this.fiveDayForecast[i]);
+            }
+            this.isGetFiveDayForecast = true;
+            this._currentForecastService.setCurrentForecast(this.fiveDayForecast);
+          })
+          .catch((error) => {
+            this.isFoundForecast = true;
+          });
+      })
     }
+  }
+  
+  onDetailClick() {
+    this._navController.push(Details);
   }
   
   getTomorrowDayName() {
@@ -96,9 +88,10 @@ export class Home implements OnInit{
   
   checkWeather(currentForecast: any) {
     let date = new Date(Number.parseInt(currentForecast.dt) * 1000);
-    currentForecast.main.temp = Math.floor(currentForecast.main.temp);
+    currentForecast.main.temp     = Math.floor(currentForecast.main.temp);
     currentForecast.main.temp_max = Math.floor(currentForecast.main.temp_max);
-    currentForecast.currentDate = (date.getHours() == 0 ? 24 : date.getHours()) + ":" + (date.getMinutes() == 0 ? "00" : date.getMinutes());
+    currentForecast.main.temp_min = Math.floor(currentForecast.main.temp_min);
+    currentForecast.currentDate   = (date.getHours() == 0 ? 24 : date.getHours()) + ":" + (date.getMinutes() == 0 ? "00" : date.getMinutes());
     
     if(currentForecast.weather[0].main == 'Clouds') {
       currentForecast.icon = 'wi wi-day-cloudy';
@@ -132,5 +125,10 @@ export class Home implements OnInit{
       currentForecast.backgroundColor = '#FB8C00';
       currentForecast.fontColor = '#eee';
     }
+  }
+  
+  doRefresh(refresher) {
+    this._navController.setRoot(this._navController.getActive().component);
+    refresher.complete();
   }
 }

@@ -99,13 +99,13 @@
 
 .content-grid__wind {
   text-align: left;
-  padding: 10px 20px 0;
+  padding: 10px 20px;
   border-right: 1px solid #eee;
 }
 
 .content-grid__humidity {
   text-align: left;
-  padding: 10px 20px 0;
+  padding: 10px 20px;
 }
 
 .color-777 {
@@ -114,60 +114,92 @@
 }
 
 .spinner-wrapper {
-  padding-top: 20px;
+  margin-top: 20px;
   text-align: center;
 }
 
-$offset: 187;
-$duration: 1.4s;
-
 .spinner {
-  animation: rotator $duration linear infinite;
+  animation: rotate 2s linear infinite;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  width: 60px;
+  height: 60px;
+
+  & .path {
+    stroke: hsl(210, 100, 75);
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite, colors 6s infinite;
+  }
+
 }
 
-@keyframes rotator {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(270deg); }
-}
-
-.path {
-  stroke-dasharray: $offset;
-  stroke-dashoffset: 0;
-  transform-origin: center;
-  animation: dash $duration ease-in-out infinite,
-             colors ($duration*4) ease-in-out infinite;
-}
-
-@keyframes colors {
-  0% { stroke: #2196F3; }
-  25% { stroke: #f44336; }
-  50% { stroke: #FFEB3B; }
-  75% { stroke: #4CAF50; }
-  100% { stroke: #2196F3; }
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes dash {
-  0% { stroke-dashoffset: $offset; }
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
   50% {
-    stroke-dashoffset: $offset/4;
-    transform:rotate(135deg);
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
   }
   100% {
-    stroke-dashoffset: $offset;
-    transform:rotate(450deg);
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
   }
 }
 
-.not-connection-title {
+@keyframes colors {
+  0% {
+    stroke: hsl(0, 100, 50);
+  }
+  25% {
+    stroke: hsl(0, 100, 50);
+  }
+  26% {
+    stroke: hsl(50, 100, 45);
+  }
+  50% {
+    stroke: hsl(50, 100, 45);
+  }
+  51% {
+    stroke: hsl(100, 100, 30);
+  }
+  75% {
+    stroke: hsl(100, 100, 30);
+  }
+  76% {
+    stroke: hsl(190, 100, 37);
+  }
+  100% {
+    stroke: hsl(190, 100, 37);
+  }
+}
+
+
+.no-connection-title {
+  padding: 0;
   font-size: 32px;
   color: #616161;
   font-family: "Roboto", "Helvetica Neue", sans-serif;
   text-align: center;
-  padding-top: 20px;
 }
 
 .valid-time {
-  font-size: 18px;
+  font-size: 16px;
   padding-bottom: 10px;
   margin: 0 auto;
+}
+
+.swipe-for-refresh {
+  font-size: 14px;
+  color: #999;
+  text-align: center;
 }

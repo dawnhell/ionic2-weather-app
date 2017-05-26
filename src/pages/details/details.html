@@ -1,0 +1,22 @@
+<ion-content padding>
+  <p class="fiveday-forecast-title">Five day forecast</p>
+  <canvas baseChart
+          height="88%"
+          width="100%"
+          [datasets] ="chartData"
+          [labels]   ="chartLabels"
+          [options]  ="chartOptions"
+          [colors]   ="chartColors"
+          [legend]   ="chartLegend"
+          [chartType]="chartType"
+          class="chart">
+  </canvas>
+
+  <button ion-fab
+          large
+          bottom
+          class="close-btn"
+          (click)="onCloseClick()">
+    <ion-icon name="close"></ion-icon>
+  </button>
+</ion-content>

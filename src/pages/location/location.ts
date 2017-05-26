@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController }     from 'ionic-angular';
-import { CityService }       from './city.service';
+import { CityService }       from '../services/city.service';
 import { Home }              from '../home/home';
 
 @Component({
